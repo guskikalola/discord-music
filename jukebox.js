@@ -3,6 +3,10 @@ const {token,prefix} = require('./config.json');
 const fs = require('fs');
 const jukebox = new Client();
 
+module.exports = {
+    'jukebox': jukebox
+}
+
 // Bot iniciado con exito
 jukebox.on('ready', () => {
     jukebox.user.setPresence({
@@ -29,7 +33,11 @@ jukebox.on('message', message => {
     const args = message.content.trim().slice(prefix.length).split(" ");
     const command = args[0].toLowerCase();
 
-
+    if(command_list[command]) {
+        let execute = require('')
+        execute.run();
+        delete require.cache[execute];
+    }
 
 });
 
