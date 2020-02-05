@@ -4,5 +4,5 @@ exports.run = (message, voiceChannel) => {
     const { jukebox, buildEmbed } = require('../jukebox.js');
 
     // --------------
-    message.member.voiceChannel.leave();
+    message.member.voice.channel.leave();
 }

@@ -27,25 +27,32 @@ exports.run = (message, voiceChannel, args) => {
         return new Promise(async resolve => {
             if (this.toString().includes('https://www.youtube.com') || this.includes('https://youtu.be')) {
                 console.log('Detected youtube.')
-                let stream = ytdl(this.toString(), {
-                    filter: 'audioonly',
-                    quality: 'highestaudio'
-                }, {
-                    bitrate: "120000",
-                    volume: 1
-                });
-                // broadcast.playStream(stream);
-                // juke = voiceChannel.playBroadcast(broadcast);
-                juke = voiceChannel.play(stream, audioOptions);
+                // let stream = ytdl(this.toString(), {
+                //     filter: 'audioonly',
+                //     quality: 'highestaudio'
+                // }, {
+                //     bitrate: "120000",
+                //     volume: 1
+                // });
+                // // broadcast.playStream(stream);
+                // // juke = voiceChannel.playBroadcast(broadcast);
+                // juke = voiceChannel.play(stream, audioOptions);
+                juke = voiceChannel.play(ytdl(
+                    'https://www.youtube.com/watch?v=N2vX39Hklto',
+                    { filter: 'audioonly' }));
                 resolve(juke)
             } else juke = voiceChannel.play(this.toString(), audioOptions);
 
         });
     }
+    if(!args[1]) {
+        message.channel.send(buildEmbed({title:'Debes proporcionar una URL de youtube'}));
+        return;
+    }
 
     args[1].playURL().then(juke => {
-    juke.on('error', e => { console.error("Error: " + e) })
-    juke.on('end', reason => { console.log(reason) })
-    juke.on('warn', warn => { console.log(warn) })
+        juke.on('error', e => { console.error })
+        juke.on('end', () => { console.log })
+        juke.on('warn', warn => { console.log })
     })
 }

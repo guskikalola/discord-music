@@ -1,4 +1,4 @@
-const { Client } = require('discord.js');
+const { Client, MessageEmbed} = require('discord.js');
 const Discord = require('discord.js');
 const { token, prefix } = require('./config.json');
 const fs = require('fs');
@@ -6,37 +6,33 @@ const jukebox = new Client();
 module.exports = {
     'jukebox': jukebox,
     'fs': fs,
-    'buildEmbed': function(options){
-        return options.title
+    'buildEmbed': function (config) {
+        let embed = new MessageEmbed();
+        if (config.color) embed.setColor(config.color);
+        if (config.footer) embed.setFooter(config.footer);
+        if (config.author) embed.setAuthor(config.author);
+        if (config.description) embed.setDescription(config.description);
+        if (config.title) embed.setTitle(config.title);
+        if (config.image) embed.setImage(config.image);
+        if (config.thumb) embed.setThumbnail(config.thumb);
+        if (config.attach) {
+            let file = new Discord.Attachment(config.attach, 'output.txt');
+            embed.attachFiles([file]);
+        }
+        if (config.fields) config.fileds.forEach(field => {
+            embed.addField(field.title, field.content);
+        });
+        if (config.length < 1) throw "No hay configuración para el Embed!";
+        return embed;
+      
     },
-    // function (config) {
-    //     let embed = new RichEmbed();
-    //     if (config.color) embed.setColor(config.color);
-    //     if (config.footer) embed.setFooter(config.footer);
-    //     if (config.author) embed.setAuthor(config.author);
-    //     if (config.description) embed.setDescription(config.description);
-    //     if (config.title) embed.setTitle(config.title);
-    //     if (config.image) embed.setImage(config.image);
-    //     if (config.thumb) embed.setThumbnail(config.thumb);
-    //     if (config.attach) {
-    //         let file = new Discord.Attachment(config.attach, 'output.txt');
-    //         embed.attachFiles([file]);
-    //     }
-    //     if (config.fields) config.fileds.forEach(field => {
-    //         embed.addField(field.title, field.content);
-    //     });
-    //     if (config.length < 1) throw "No hay configuración para el Embed!";
-    //     return embed;
-        
-    // },
-    server_queue: new Set()
+    'server_queue': new Set()
 }
 
 let { buildEmbed } = require('./jukebox.js')
 
 // Bot iniciado con exito
 jukebox.on('ready', () => {
-    console.log(typeof (Discord.RichEmbed))
     jukebox.user.setPresence({
         name: 'musica.',
         type: 'LISTENING'
